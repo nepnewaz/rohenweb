@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ROHEN DANGOL | Award-Winning Photography Studio</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/ScrollTrigger.min.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Syncopate:wght@400;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    <style>
+        :root { --accent: #e5e5e5; --bg: #0a0a0a; }
+        body { background-color: var(--bg); color: var(--accent); font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .font-heading { font-family: 'Syncopate', sans-serif; }
+        html { scroll-behavior: smooth; }
+        .masonry-container { columns: 1; column-gap: 1rem; }
+        @media (min-width: 768px) { .masonry-container { columns: 2; } }
+        @media (min-width: 1024px) { .masonry-container { columns: 3; } }
+        .masonry-item { break-inside: avoid; margin-bottom: 1rem; transition: transform 0.5s cubic-bezier(0.23, 1, 0.32, 1); cursor: pointer; position: relative; overflow: hidden; border-radius: 4px; }
+        .masonry-item:hover { transform: scale(1.02); }
+        .masonry-item img { width: 100%; display: block; filter: grayscale(40%); transition: 0.5s; }
+        .masonry-item:hover img { filter: grayscale(0%); }
+        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255, 255, 255, 0.1); }
+        .nav-link { position: relative; padding-bottom: 2px; }
+        .nav-link::after { content: ''; position: absolute; bottom: 0; left: 0; width: 0%; height: 1px; background: #fff; transition: 0.3s; }
+        .nav-link:hover::after { width: 100%; }
+        #loader { position: fixed; inset: 0; background: #000; z-index: 9999; display: flex; justify-content: center; align-items: center; font-family: 'Syncopate'; }
+        .ai-glow { box-shadow: 0 0 20px rgba(147, 51, 234, 0.1); border: 1px solid rgba(147, 51, 234, 0.3); }
+        ::-webkit-scrollbar { width: 4px; }
+        ::-webkit-scrollbar-thumb { background: #333; border-radius: 10px; }
+    </style>
+</head>
+<body>
+
+    <!-- Loading Screen -->
+    <div id="loader">
+        <h1 class="text-3xl tracking-widest animate-pulse uppercase">ROHEN DANGOL</h1>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full z-50 p-6 flex justify-between items-center mix-blend-difference">
+        <div class="font-heading text-xl tracking-tighter uppercase cursor-pointer" onclick="showView('home')">ROHEN DANGOL.</div>
+        <div class="hidden md:flex gap-8 text-xs uppercase tracking-widest">
+            <a href="#" class="nav-link" onclick="showView('home')">Home</a>
+            <a href="#" class="nav-link" onclick="showView('gallery')">Gallery</a>
+            <a href="#" class="nav-link" onclick="showView('booking')">Book Shoot</a>
+            <a href="#" class="nav-link" onclick="showView('admin')">Admin</a>
+        </div>
+    </nav>
+
+    <!-- Home View -->
+    <section id="view-home" class="view min-h-screen pt-32 px-6">
+        <div class="max-w-7xl mx-auto">
+            <div class="overflow-hidden mb-12">
+                <h1 class="font-heading text-5xl md:text-8xl leading-none tracking-tighter hero-text">CAPTURING<br><span class="text-neutral-500">THE UNSEEN</span></h1>
+            </div>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12 items-center">
+                <div class="space-y-6 hero-sub opacity-0 translate-y-10">
+                    <p class="text-neutral-400 max-w-md leading-relaxed">An award-winning visual studio led by Rohen Dangol, specializing in high-fashion editorial, architecture, and cinematic storytelling.</p>
+                    <div class="flex flex-wrap gap-4">
+                        <button onclick="showView('gallery')" class="border border-white/20 px-8 py-3 rounded-full hover:bg-white hover:text-black transition-all text-sm uppercase tracking-widest">Explore Portfolio</button>
+                        <button onclick="openVisionary()" class="bg-purple-600/20 border border-purple-500/30 px-8 py-3 rounded-full hover:bg-purple-600 hover:text-white transition-all text-sm uppercase tracking-widest">✨ Visionary AI</button>
+                    </div>
+                </div>
+                <div class="relative h-[500px] bg-neutral-900 overflow-hidden rounded-lg group">
+                    <img src="https://images.unsplash.com/photo-1542038784456-1ea8e935640e?auto=format&fit=crop&q=80&w=1000" class="w-full h-full object-cover grayscale opacity-60 group-hover:grayscale-0 group-hover:scale-105 transition-transform duration-700" alt="Studio Shot">
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Gallery View -->
+    <section id="view-gallery" class="view hidden min-h-screen pt-32 px-6 pb-20">
+        <div class="max-w-7xl mx-auto">
+            <div class="flex justify-between items-end mb-12">
+                <div><h2 class="font-heading text-4xl uppercase">Portfolio</h2><p class="text-xs text-neutral-500 mt-2 uppercase tracking-widest">Click for ✨ AI Analysis</p></div>
+            </div>
+            <div id="masonry-grid" class="masonry-container"></div>
+        </div>
+    </section>
+
+    <!-- Booking View -->
+    <section id="view-booking" class="view hidden min-h-screen pt-32 px-6 pb-20">
+        <div class="max-w-3xl mx-auto">
+            <div class="glass p-10 rounded-2xl">
+                <h2 class="font-heading text-3xl mb-8 uppercase">RESERVE A SESSION</h2>
+                <div class="ai-glow p-6 rounded-xl mb-8 bg-purple-900/5">
+                    <p class="text-[10px] uppercase font-bold text-purple-400 mb-4 tracking-widest">✨ AI Creative Brainstorm</p>
+                    <div class="flex gap-2">
+                        <input type="text" id="ai-concept-prompt" placeholder="e.g. Neon Tokyo fashion..." class="flex-1 bg-white/5 border border-white/10 rounded-lg px-4 py-2 text-sm focus:outline-none focus:border-purple-500 transition-all">
+                        <button onclick="generateConcept()" id="ai-concept-btn" class="bg-purple-600 px-4 py-2 rounded-lg text-xs font-bold uppercase hover:bg-purple-500 transition-all">Generate</button>
+                    </div>
+                    <div id="ai-concept-result" class="mt-4 text-sm text-neutral-300 italic hidden"></div>
+                </div>
+                <form id="booking-form" class="space-y-6">
+                    <input type="text" id="booking-name" placeholder="Full Name" required class="w-full bg-transparent border-b border-white/20 p-2 focus:outline-none focus:border-white transition-colors">
+                    <input type="email" id="booking-email" placeholder="Email Address" required class="w-full bg-transparent border-b border-white/20 p-2 focus:outline-none focus:border-white transition-colors">
+                    <select id="booking-type" class="w-full bg-black border-b border-white/20 p-2 focus:outline-none focus:border-white transition-colors">
+                        <option value="Editorial">Editorial Portrait</option>
+                        <option value="Commercial">Commercial/Product</option>
+                        <option value="Event">Event Documentation</option>
+                    </select>
+                    <button type="submit" class="w-full py-4 bg-white text-black font-bold uppercase tracking-widest hover:bg-neutral-200 transition-colors">Confirm Session</button>
+                </form>
+            </div>
+        </div>
+    </section>
+
+    <!-- Admin View (Local Mock) -->
+    <section id="view-admin" class="view hidden min-h-screen pt-32 px-6 pb-20">
+        <div class="max-w-7xl mx-auto">
+            <h2 class="font-heading text-3xl mb-8 uppercase">Dashboard (Session Only)</h2>
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-xs font-bold uppercase mb-4 tracking-widest">Add to Gallery</h3>
+                    <div class="space-y-4">
+                        <input type="text" id="admin-img-url" placeholder="Image URL" class="w-full bg-white/5 border border-white/10 p-3 rounded-lg">
+                        <button onclick="addLocalPhoto()" class="w-full py-3 bg-blue-600 rounded-lg text-sm font-bold uppercase">Add Photo</button>
+                    </div>
+                </div>
+                <div class="glass p-6 rounded-xl">
+                    <h3 class="text-xs font-bold uppercase mb-4 tracking-widest">Recent Inquiries</h3>
+                    <div id="admin-bookings-list" class="space-y-3">
+                        <p class="text-xs text-neutral-500 italic">No inquiries received in this session.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Visionary AI Modal -->
+    <div id="visionary-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-sm">
+        <div class="max-w-2xl w-full glass rounded-2xl p-8 relative">
+            <button onclick="closeVisionary()" class="absolute top-4 right-4 text-neutral-500 hover:text-white">✕</button>
+            <h3 class="font-heading text-2xl mb-2 text-purple-400">✨ VISIONARY AI</h3>
+            <div id="visionary-chat" class="h-64 overflow-y-auto mb-6 space-y-4 p-4 bg-black/40 rounded-lg border border-white/5"></div>
+            <div class="flex gap-2">
+                <input type="text" id="visionary-input" placeholder="Ask anything about Rohen's style..." class="flex-1 bg-white/5 border border-white/10 rounded-xl px-4 py-3 text-sm focus:outline-none">
+                <button onclick="askVisionary()" class="bg-purple-600 px-6 py-3 rounded-xl font-bold uppercase text-xs">Send</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- AI Analysis Modal -->
+    <div id="analysis-modal" class="fixed inset-0 z-[60] hidden flex items-center justify-center p-6 bg-black/90 backdrop-blur-md">
+        <div class="max-w-4xl w-full glass rounded-2xl flex flex-col md:flex-row overflow-hidden relative">
+            <button onclick="closeAnalysis()" class="absolute top-4 right-4 text-white z-10 bg-black/50 w-8 h-8 rounded-full">✕</button>
+            <div class="md:w-1/2 bg-black"><img id="analysis-img" class="w-full h-full object-contain"></div>
+            <div class="md:w-1/2 p-8"><h3 class="font-heading text-xl mb-4 text-purple-400">✨ AESTHETIC ANALYSIS</h3><div id="analysis-text" class="text-sm text-neutral-300 leading-relaxed italic h-64 overflow-y-auto"></div></div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const apiKey = ""; // API Key provided by the platform context
+        
+        // Local State (Replaces Firebase)
+        let localGallery = [
+            "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=800",
+            "https://assets.vogue.in/photos/69f4961fc7fa76e354553f7b/3:4/w_1600,c_limit/SnapInsta.to_684147374_18407932726150736_536544995337711679_n.jpg?w=800",
+            "https://assets.vogue.in/photos/5d288836e2f0130008fa5d30/2:3/w_1600,c_limit/model%20nidhi%20sunil.jpg?w=800",
+            "https://images.unsplash.com/photo-1515886657613-9f3515b0c78f?w=800",
+            "https://images.unsplash.com/photo-1524504388940-b1c1722653e1?w=800",
+            "https://images.unsplash.com/photo-1488161628813-04466f872be2?w=800"
+        ];
+        let localBookings = [];
+
+        // API Helper
+        async function callGemini(prompt, systemMsg) {
+            try {
+                const response = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash-preview-09-2025:generateContent?key=${apiKey}`, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({
+                        contents: [{ parts: [{ text: prompt }] }],
+                        systemInstruction: { parts: [{ text: systemMsg }] }
+                    })
+                });
+                const data = await response.json();
+                return data.candidates?.[0]?.content?.parts?.[0]?.text || "Unable to focus creative vision at the moment.";
+            } catch (err) {
+                return "The studio's neural link is offline. Please try again later.";
+            }
+        }
+
+        // View Controller
+        window.showView = (id) => {
+            document.querySelectorAll('.view').forEach(v => v.classList.add('hidden'));
+            const target = document.getElementById(`view-${id}`);
+            target.classList.remove('hidden');
+            gsap.fromTo(target, { opacity: 0, y: 20 }, { opacity: 1, y: 0, duration: 0.6 });
+            
+            if (id === 'gallery') renderGallery();
+            window.scrollTo(0, 0);
+        };
+
+        // Gallery Logic
+        function renderGallery() {
+            const grid = document.getElementById('masonry-grid');
+            grid.innerHTML = '';
+            localGallery.forEach(url => {
+                const item = document.createElement('div');
+                item.className = 'masonry-item';
+                item.innerHTML = `<img src="${url}" loading="lazy">`;
+                item.onclick = () => openAnalysis(url);
+                grid.appendChild(item);
+            });
+        }
+
+        function addLocalPhoto() {
+            const urlInput = document.getElementById('admin-img-url');
+            if (urlInput.value) {
+                localGallery.unshift(urlInput.value);
+                urlInput.value = '';
+                alert('Photo added to local session gallery!');
+            }
+        }
+
+        // AI Features
+        window.generateConcept = async () => {
+            const input = document.getElementById('ai-concept-prompt');
+            const res = document.getElementById('ai-concept-result');
+            const btn = document.getElementById('ai-concept-btn');
+            if (!input.value) return;
+
+            btn.innerText = "...";
+            res.classList.remove('hidden');
+            res.innerText = "Consulting the creative muse...";
+            
+            const prompt = `Create a high-fashion photography concept for: ${input.value}. Include lighting style, color palette, and wardrobe ideas. One paragraph.`;
+            res.innerText = await callGemini(prompt, "You are Rohen Dangol's Creative Lead.");
+            btn.innerText = "Generate";
+        };
+
+        window.openAnalysis = async (url) => {
+            document.getElementById('analysis-img').src = url;
+            document.getElementById('analysis-text').innerText = "Analyzing composition and color theory...";
+            document.getElementById('analysis-modal').classList.remove('hidden');
+            
+            const prompt = `Analyze the aesthetics of this image URL: ${url}. Discuss the mood, potential technical settings, and artistic value. Keep it professional and concise.`;
+            document.getElementById('analysis-text').innerText = await callGemini(prompt, "You are a world-class art and photography critic.");
+        };
+
+        window.askVisionary = async () => {
+            const input = document.getElementById('visionary-input');
+            const chat = document.getElementById('visionary-chat');
+            const msg = input.value;
+            if (!msg) return;
+
+            input.value = '';
+            chat.innerHTML += `<div class="text-sm text-neutral-500 text-right"><b>Client:</b> ${msg}</div>`;
+            
+            const typing = document.createElement('div');
+            typing.className = "text-sm text-purple-400";
+            typing.innerHTML = "<b>Visionary:</b> thinking...";
+            chat.appendChild(typing);
+            chat.scrollTop = chat.scrollHeight;
+
+            const response = await callGemini(msg, "You are the AI studio assistant for Rohen Dangol. You are helpful, artistic, and explain technical photography details simply.");
+            typing.innerHTML = `<b>Visionary:</b> ${response}`;
+            chat.scrollTop = chat.scrollHeight;
+        };
+
+        // Modal Helpers
+        window.closeAnalysis = () => document.getElementById('analysis-modal').classList.add('hidden');
+        window.openVisionary = () => {
+            document.getElementById('visionary-modal').classList.remove('hidden');
+            gsap.from("#visionary-modal > div", { scale: 0.9, opacity: 0 });
+        };
+        window.closeVisionary = () => document.getElementById('visionary-modal').classList.add('hidden');
+
+        // Form Handling
+        document.getElementById('booking-form').onsubmit = (e) => {
+            e.preventDefault();
+            const booking = {
+                name: document.getElementById('booking-name').value,
+                email: document.getElementById('booking-email').value,
+                type: document.getElementById('booking-type').value,
+                id: Date.now()
+            };
+            localBookings.push(booking);
+            updateAdminList();
+            alert('Booking request sent successfully!');
+            showView('home');
+            e.target.reset();
+        };
+
+        function updateAdminList() {
+            const list = document.getElementById('admin-bookings-list');
+            if (localBookings.length === 0) return;
+            list.innerHTML = localBookings.map(b => `
+                <div class="p-3 border border-white/5 rounded-lg text-xs">
+                    <p class="font-bold">${b.name}</p>
+                    <p class="text-neutral-500">${b.type} - ${b.email}</p>
+                </div>
+            `).join('');
+        }
+
+        // Init
+        window.onload = () => {
+            gsap.to("#loader", { opacity: 0, pointerEvents: "none", duration: 0.8, delay: 1 });
+            gsap.to(".hero-text", { opacity: 1, duration: 1, delay: 1.2 });
+            gsap.to(".hero-sub", { opacity: 1, y: 0, duration: 1, delay: 1.4 });
+            renderGallery();
+        };
+    </script>
+</body>
+</html>
